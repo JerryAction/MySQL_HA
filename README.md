@@ -3,13 +3,14 @@
 ## 方案需求
 <img width="1256" height="554" alt="image" src="https://github.com/user-attachments/assets/fbad1932-b3ec-4f51-a6b8-ddc251c67099" />
 
-左边是主机房，右边是备机房。实现备机房主库高可用
+左边是主机房，右边是备机房。**实现备机房主库高可用**
 高可用健壮性：Manager节点进程存活和切换告警可使用以存在的基线配置。
 
 ## 方案设计
 使用MHA 0.58版本，**修改其代码**解决以下问题：
 - 备机房主库MySQL服务异常，30s后自动切换到从库，并重建存活节点的主从关系。
 - 故障切换后，重建新主库与主机房的复制链路
+  
 Tips: **只支持GTID复制。**
 
 **设计的逻辑：**
@@ -226,6 +227,7 @@ fi
 <img width="1060" height="239" alt="image" src="https://github.com/user-attachments/assets/8bafeaaa-060a-477d-8c5b-3fc5ea0a6873" />
 
 其他测试：
+
 🆗 新编的代码：如果旧主库服务异常：下面的手动切换可以正常执行。
 masterha_master_switch --conf=/data/mha/mha_store_center.conf --master_state=dead --dead_master_host=10.186.61.75  --dead_master_port=3306 --new_master_host=10.186.61.9 --new_master_port=3306 --ignore_last_failover 
 
