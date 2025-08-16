@@ -1,3 +1,8 @@
+文件介绍：
+.bak为原始代码文件
+.pm为此项目 新代码文件
+rebuild_dc_replication.sh文failover之后机房链路重建shell脚本
+
 # MySQL_HA **备机房**高可用方案设计
 
 ## 方案需求
