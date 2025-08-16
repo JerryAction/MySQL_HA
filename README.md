@@ -231,9 +231,11 @@ fi
 其他测试：
 
 🆗 新编的代码：如果旧主库服务异常：下面的手动切换可以正常执行。
+```bash
 masterha_master_switch --conf=/data/mha/mha_store_center.conf --master_state=dead --dead_master_host=10.186.61.75  --dead_master_port=3306 --new_master_host=10.186.61.9 --new_master_port=3306 --ignore_last_failover 
-
+```
 注意⚠️新编的代码：需要清空旧主复制关系才行，等于是复原为原始MHA架构（不存在循环复制），才能正常执行。
+```bash
 masterha_master_switch --conf=/etc/mha/mha.conf --master_state=alive --new_master_host=10.186.63.112 --new_master_port=3306 --orig_master_is_new_slave
-
+```
 
