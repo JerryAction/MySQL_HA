@@ -33,6 +33,8 @@ Tips: **只支持GTID复制。**
 - 准备MHA环境，包括主从配置、软件安装、切换脚本配置。
   
 **- 使用新MasterMonitor.pm和ServerManager.pm替换/usr/share/perl5/vendor_perl/MHA目录中的同名文件。**
+Centos路径：/usr/share/perl5/vendor_perl/MHA 
+Ubuntu路径：/usr/share/perl5/MHA/
 
 - 准备复制链路重建脚本rebuild_dc_replication.sh。
 ### 1. 新代码的逻辑
