@@ -44,27 +44,15 @@ Ubuntu路径：/usr/share/perl5/MHA/
 
 <img width="2216" height="505" alt="image" src="https://github.com/user-attachments/assets/146ee8b1-736c-4b67-b9ca-d8f7277ab15e" />
 
-#### 1.1 循环复制检测
-- MasterMonitor.pm ：在 wait_until_master_is_unreachable 和 wait_until_master_is_dead 函数中，通过比较 $real_master 与 $dead_master 的 IP 地址和端口来判断是否为循环复制场景 ( $is_circular 变量)。
-- ServerManager.pm ：在 get_primary_master 函数中，当检测到两个主库相互复制时（即每个主库都把另一个主库作为自己的主库），会将其识别为循环复制配置。
-#### 1.2  循环复制处理逻辑
-- MasterMonitor.pm ：
-  - 在循环复制场景下，从存活的主库中选择 $real_master 作为新的主库。
-  - 增加了针对循环复制场景的日志记录。
-- ServerManager.pm ：
-  - 在 get_primary_master 函数中，如果检测到循环复制，会选择其中一个主库作为主主配置中的主库，并记录相关日志。
-新ServerManager.pm增加以下内容：
+改动如下，MasterMonitor.pm 的核心逻辑基本保持不变，但增加了与 ServerManager.pm 中新功能的交互，特别是在以下几个位置：
 
-<img width="1373" height="256" alt="image" src="https://github.com/user-attachments/assets/27b1e431-680e-4d53-b89f-4a1f9763640e" />
-<img width="1280" height="306" alt="image" src="https://github.com/user-attachments/assets/dd407abf-685e-4b86-b465-20f2ca5be577" />
-<img width="1280" height="681" alt="image" src="https://github.com/user-attachments/assets/a0be1652-660c-4d0b-86cd-6334fb3559a9" />
-<img width="1280" height="765" alt="image" src="https://github.com/user-attachments/assets/a76d3baa-b3b7-4665-a2ef-c03f31bf1745" />
-
-新MasterMonitor.pm增加以下内容：
-<img width="1280" height="797" alt="image" src="https://github.com/user-attachments/assets/c843f27f-4685-42c4-a18c-c8f29fe2d56c" />
-<img width="1280" height="494" alt="image" src="https://github.com/user-attachments/assets/f21944a2-d139-4df7-896c-7a95085eecc8" />
-<img width="1280" height="768" alt="image" src="https://github.com/user-attachments/assets/e5e13d71-bc36-48a3-9dff-bfbd5f0ea279" />
-<img width="1458" height="256" alt="image" src="https://github.com/user-attachments/assets/1e3a433a-8652-451b-bd5d-49855750b8b5" />
+1.  第342行：调用修改后的 get_current_alive_master 方法获取当前活跃主库
+2.  第427行：主库监控逻辑中的健康检查
+3.  第525行：主库故障检测后的处理流程
+### 新代码支持的功能
+1. 防止未初始化值错误 ：通过添加 defined() 检查，避免了 "Use of uninitialized value in string eq" 错误，提高了代码的健壮性和稳定性。
+2. 自动主库选择 ：当原始主库未配置时，系统会自动从候选主库列表中选择第一个作为主库，简化了配置过程和故障转移处理。
+3. 支持复杂复制拓扑 ：修改后的代码允许从服务器复制自不同的主服务器，支持主服务器本身是另一台服务器的从服务器的多层复制架构。（只支持备机房单主哈，不支持从库之间级联）
 
 ### 2. MHA配置文件示例
 
