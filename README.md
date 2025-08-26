@@ -70,7 +70,7 @@ new_master_ip为备机房新主库IP
 new_master_port为备机房MySQL端口
 
 # 添加 备机房的非切换从库->不参与切换
-no_master=0
+no_master=1
 ```
 /data/mha/mha_store_center.conf内容示例：
 ```bash
@@ -101,7 +101,7 @@ master_binlog_dir=/data/mysql/log/binlog/3306
 port=3306
 
 [server3]
-no_master=0
+no_master=1
 hostname=10.186.61.23
 master_binlog_dir=/data/mysql/log/binlog/3316
 port=3316
